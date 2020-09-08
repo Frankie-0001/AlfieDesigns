@@ -1,5 +1,52 @@
-// Carousel
+// CAROUSEL
+const carousel = document.querySelector('.carousel')
+const [
+	carouselButtons,
+	carouselContainer,
+	carouselBars
+] = carousel.children;
+let carouselTimer
 
+[...carouselButtons.children].forEach(button => {
+	button.addEventListener('click', ({currentTarget}) => {
+		// if (carouselTimer) {
+		// 	clearTimeout(carouselTimer)
+		// }
+		let direction = currentTarget.className.match(/left|right/gi).pop()
+		switchCarouselContent(direction)
+		// carouselTimer = automateCarousel()
+	})
+})
+
+function switchCarouselContent (direction) {
+	const [contents, bars] = [carouselContainer.children, carouselBars.children]
+	const total = contents.length
+	let [index, activeContent, activeBar] = [0]
+
+	for (let child of contents) {
+		if (child.classList.contains('active')) {
+			activeContent = child
+			activeBar = bars[index]
+			break
+		}
+		index++
+	};
+	// deactivate currently active items
+	activeContent.classList.remove('active')
+	activeBar.classList.remove('active')
+	// activeContent.ontransitionend = activeContent.oonwebkittransitionend = () => {
+		// activate next items
+		index = (index + (direction === 'left' ? -1 : 1)) % total;
+		contents[index].classList.add('active')
+		bars[index].classList.add('active')
+	// }
+}
+// auto change carousel content
+const automateCarousel = () => setInterval(() => switchCarouselContent('right'), 5000)
+carouselTimer = automateCarousel()
+
+
+// CLIENTS FEEDBACK SECTION
 
 // Client feedbacks slider
 const sliderContainer = document.querySelector('.feedback-container')
@@ -79,3 +126,8 @@ function switchFeedback(direction) {
 
 // automatically slide through the client feedbacks
 // setInterval(() => switchFeedback('right'), 3500)
+
+// ========================================================
+
+
+//
